@@ -5,14 +5,33 @@ const fs = require('fs');
 
 // ^ fs allows us to read or write to a file for caching
 
-const cacheInterval = 60 * 5; //5 minutes
+var cacheInterval = 60 * 5; //5 minutes
 
 // ^ If the cache is less than this many minutes old, serve it
 
 
 module.exports = {
+  
+  setCacheInterval: function(interval) {
+    cacheInterval = interval;
+  },
 
   writeCacheWithPath: function(path, object) {
+    
+    var pathComponents = path.split("/");
+    var intermediatePath = "";
+    
+    for (var i = 0; i < pathComponents.length - 1; i++) {
+     
+      var pathComponent = pathComponents[i];
+      pathComponent = pathComponent + "/";
+      intermediatePath = intermediatePath + pathComponent;
+      
+      if (fs.existsSync(intermediatePath) != true) {
+         fs.mkdirSync(intermediatePath); 
+      }
+      
+    }
   
     fs.writeFile(path, JSON.stringify(object), function(err) {
       if (err) throw err;

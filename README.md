@@ -1,4 +1,4 @@
-node.js Airtable API Proxy
+node.js Airtable API Proxy by [Future Fluent](http://futurefluent.com)
 =================
 
 Here's a project demonstrating the basics of an Airtable API proxy using node.js and Express. Click here to [see the source and remix for your own purposes](https://glitch.com/edit/#!/airtable-api-proxy).
@@ -31,7 +31,7 @@ Returns cached JSON, if it's not too stale. Use `cacheInterval` to adjust this.
 
 `writeCacheWithPath(path, object)`
 
-Writes a JavaScript object to JSON at the specified path.
+Writes a JavaScript object to JSON at the specified path, creating intermediate directories as needed.
 
 ## database-connection.js
 
@@ -43,4 +43,4 @@ For more on accessing Airtable via the API, see [the interactive Airtable docume
 
 ### Rate limiting
 
-[Bottleneck](https://www.npmjs.com/package/bottleneck) handles rate limiting. The Airtable database interactions are wrapped using Bottleneck's `wrap` function.
+[Bottleneck](https://www.npmjs.com/package/bottleneck) handles rate limiting. The Airtable database interactions are handled using Bottleneck's `wrap` function.
