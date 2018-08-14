@@ -35,7 +35,7 @@ function sendResultWithResponse(result, response) {
 }
 
 function cachePathForRequest(request) {
-  return '.cache' + request.path + '.json';  
+  return '.newcache' + request.path + '.json';  
 }
 
 module.exports = {
