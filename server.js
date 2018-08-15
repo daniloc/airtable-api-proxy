@@ -9,9 +9,9 @@ const app = express();
 
 const connection = require('./database-connection');
 
-app.get("/api/ai/list/:page", function(request, response) {
-  console.log("Handling AI list API request");
-  connection.handleAIListRequest(request, response);
+app.get("/api/:table/list/:page", function(request, response) {
+  console.log("Handling API request");
+  connection.handleListRequest(request, response);
 });
 
 app.get("/api*", function(request, response) {

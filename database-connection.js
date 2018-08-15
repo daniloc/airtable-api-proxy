@@ -1,6 +1,25 @@
 // database-connection.js
 // Where we connect to Airtable and handle requests from server.js
 
+// ⚠️ Configure routes between API paths and tables here!
+
+const tableRoutes = {
+  ai : 'AI in Science Fiction',
+  properties: 'Science Fiction Properties'
+};
+
+// ^ These are the tables we'll be loading
+// The :table parameter in the path /api/:table/list/:page
+// should match to keys in this object, example:
+
+// https://airtable-api-proxy.glitch.me/api/ai/list/0
+// maps to 'AI in Science Fiction'
+
+const viewName = 'Grid view';
+
+// We'll assume each table has a "Grid view" view, and target that in our queries
+
+
 const Airtable = require('airtable');
 
 const base = new Airtable({
@@ -9,12 +28,6 @@ const base = new Airtable({
 
 // ^ Configure Airtable using values in 🗝.env
 
-const viewName = 'Grid view';
-
-const tableAI = 'AI in Science Fiction';
-const tableProperties = 'Science Fiction Properties';
-
-// ^ These are the tables we'll be reading from Airtable
 
 const Bottleneck = require('bottleneck');
 const rateLimiter = new Bottleneck({
@@ -38,9 +51,15 @@ function cachePathForRequest(request) {
   return '.newcache' + request.path + '.json';  
 }
 
+function tableNameFromRequest(request) {
+  
+  return tableRoutes[request.params.table];
+}
+
+ 
 module.exports = {
 
-  handleAIListRequest: function(request, response) {
+  handleListRequest: function(request, response) {
     
     var cachePath = cachePathForRequest(request);
     
@@ -56,7 +75,7 @@ module.exports = {
 
       var pageNumber = 0;
 
-      rateLimiter.wrap(base(tableAI).select({
+      rateLimiter.wrap(base(tableNameFromRequest(request)).select({
         view: viewName,
         pageSize: 3 //This page size is unnecessarily small, for demonstration purposes.
                     //You should probably use the default of 100 in your own code.
@@ -64,18 +83,11 @@ module.exports = {
                 
         if (pageNumber == request.params.page) {
 
-          var results = [];
+          var results = {};
 
           records.forEach(function(record) {
-            
-            var result = {
-              name: record.get('Name'),
-              housing: record.get('Housing Type'),
-              notes: record.get('Notes'),
-              propertyID: record.get('Property')
-            }
 
-            results.push(result);
+            results[record.id] = record.fields;
 
           });
 
@@ -89,7 +101,7 @@ module.exports = {
         }
 
       }, function done(error) {
-          sendResultWithResponse([], response);
+          sendResultWithResponse([error], response);
       }));
 
     }
