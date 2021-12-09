@@ -9,7 +9,7 @@ Airtable's rate limit is five requests per second per base. Anything more than t
 
 Additionally, an API proxy allows you to keep your API key a secret. Since all Airtable API keys allow full CRUD access, using the key in client-side JavaScript code would leave your data subject to outside tampering.
 
-Click here for [example output](https://airtable-api-proxy.glitch.me/api/ai/list/0). Records are returned as a JSON dictionary, keyed with their Airtable record IDs. This facilitates stitching together relationship fields on the client.
+Click here for [example output](https://airtable-api-proxy.glitch.me/api/ai/list/0).
 
 Click here to see the [source data](https://airtable.com/shrK9YNbrZa8MsyCw).
 
@@ -19,7 +19,7 @@ Three files drive the proxy:
 
 ## server.js
 
-An API route, `/api/:table/list/:page`, demonstrates how to serve JSON in response to a request.
+An API route, `/api/ai/list/:page`, demonstrates how to serve JSON in response to a request.
 
 ## caching.js
 
@@ -36,8 +36,6 @@ Writes a JavaScript object to JSON at the specified path, creating intermediate 
 ## database-connection.js
 
 This is the meat of the project. It uses the Airtable node.js client to connect to a base and writes the results out as a JSON response.
-
-`tableRoutes` maps between API paths and the names of tables in your Airtable base.
 
 Base ID and Airtable API key are in 🗝.env.
 
